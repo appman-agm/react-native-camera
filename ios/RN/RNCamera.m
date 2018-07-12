@@ -365,7 +365,7 @@ static NSDictionary *defaultFaceDetectorOptions = nil;
             float quality = [options[@"quality"] floatValue];
             NSData *takenImageData = UIImageJPEGRepresentation(takenImage, quality);
             NSString *path = [RNFileSystem generatePathInDirectory:[[RNFileSystem cacheDirectoryPath] stringByAppendingPathComponent:@"Camera"] withExtension:@".jpg"];
-            response[@"uri"] = [RNImageUtils writeImage:takenImageData toPath:path];
+//             response[@"uri"] = [RNImageUtils writeImage:takenImageData toPath:path];
             response[@"width"] = @(takenImage.size.width);
             response[@"height"] = @(takenImage.size.height);
 
