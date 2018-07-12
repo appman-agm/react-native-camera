@@ -4,7 +4,6 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.media.ExifInterface;
 import android.util.Base64;
@@ -49,30 +48,30 @@ public class ResolveTakenPictureAsyncTask extends AsyncTask<Void, Void, Writable
         WritableMap response = Arguments.createMap();
         ByteArrayInputStream inputStream = null;
 
-        if (mOptions.hasKey("skipProcessing")) {
-            try {
-                // Prepare file output
-                File imageFile = new File(RNFileUtils.getOutputFilePath(mCacheDirectory, ".jpg"));
-                imageFile.createNewFile();
-                FileOutputStream fOut = new FileOutputStream(imageFile);
-
-                // Save byte array (it is already a JPEG)
-                fOut.write(mImageData);
-
-                // Return file system URI
-                String fileUri = Uri.fromFile(imageFile).toString();
-                response.putString("uri", fileUri);
-
-            } catch (Resources.NotFoundException e) {
-                mPromise.reject(ERROR_TAG, "Documents directory of the app could not be found.", e);
-                e.printStackTrace();
-            } catch (IOException e) {
-                mPromise.reject(ERROR_TAG, "An unknown I/O exception has occurred.", e);
-                e.printStackTrace();
-            }
-
-            return response;
-        }
+//        if (mOptions.hasKey("skipProcessing")) {
+//            try {
+//                // Prepare file output
+//                File imageFile = new File(RNFileUtils.getOutputFilePath(mCacheDirectory, ".jpg"));
+//                imageFile.createNewFile();
+//                FileOutputStream fOut = new FileOutputStream(imageFile);
+//
+//                // Save byte array (it is already a JPEG)
+//                fOut.write(mImageData);
+//
+//                // Return file system URI
+//                String fileUri = Uri.fromFile(imageFile).toString();
+//                response.putString("uri", fileUri);
+//
+//            } catch (Resources.NotFoundException e) {
+//                mPromise.reject(ERROR_TAG, "Documents directory of the app could not be found.", e);
+//                e.printStackTrace();
+//            } catch (IOException e) {
+//                mPromise.reject(ERROR_TAG, "An unknown I/O exception has occurred.", e);
+//                e.printStackTrace();
+//            }
+//
+//            return response;
+//        }
 
         // we need the stream only for photos from a device
         if (mBitmap == null) {
@@ -116,10 +115,10 @@ public class ResolveTakenPictureAsyncTask extends AsyncTask<Void, Void, Writable
             mBitmap.compress(Bitmap.CompressFormat.JPEG, getQuality(), imageStream);
 
             // Write compressed image to file in cache directory
-            String filePath = writeStreamToFile(imageStream);
-            File imageFile = new File(filePath);
-            String fileUri = Uri.fromFile(imageFile).toString();
-            response.putString("uri", fileUri);
+//            String filePath = writeStreamToFile(imageStream);
+//            File imageFile = new File(filePath);
+//            String fileUri = Uri.fromFile(imageFile).toString();
+//            response.putString("uri", fileUri);
 
             // Write base64-encoded image to the response if requested
             if (mOptions.hasKey("base64") && mOptions.getBoolean("base64")) {
@@ -132,7 +131,7 @@ public class ResolveTakenPictureAsyncTask extends AsyncTask<Void, Void, Writable
                 inputStream.close();
                 inputStream = null;
             }
-
+            mBitmap.recycle();
             return response;
         } catch (Resources.NotFoundException e) {
             mPromise.reject(ERROR_TAG, "Documents directory of the app could not be found.", e);
